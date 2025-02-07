@@ -6,6 +6,8 @@ from forms import LoginForm, RegistrationForm, SubjectForm, ChapterForm, QuizFor
 from werkzeug.security import generate_password_hash, check_password_hash
 from database import db, migrate
 from config import Config
+from datetime import datetime, timedelta
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -22,8 +24,26 @@ def load_user(user_id):
 
 @app.before_request
 def initialize_database():
-    # Remove this method or ensure it's not creating duplicate database entries
+    
     pass
+
+@app.template_filter('timeago')
+def timeago(date):
+    now = datetime.now(datetime.timezone.utc)
+    diff = now - date
+
+    if diff.days > 30:
+        return date.strftime('%B %d, %Y')
+    elif diff.days > 0:
+        return f'{diff.days} days ago'
+    elif diff.seconds > 3600:
+        hours = diff.seconds // 3600
+        return f'{hours} hours ago'
+    elif diff.seconds > 60:
+        minutes = diff.seconds // 60
+        return f'{minutes} minutes ago'
+    else:
+        return 'just now'
 
 @app.route('/')
 def home():
@@ -156,11 +176,71 @@ def new_question(quiz_id):
 @app.route('/user/dashboard')
 @login_required
 def user_dashboard():
-    if current_user.is_admin:
-        abort(403)
+    # Get total quizzes taken by user
+    total_quizzes = Score.query.filter_by(user_id=current_user.id).count()
+    
+    # Calculate average score
+    user_scores = Score.query.filter_by(user_id=current_user.id).all()
+    if user_scores:
+        avg_score = sum([(score.total_scored / score.total_questions) * 100 for score in user_scores]) / len(user_scores)
+        avg_score = round(avg_score, 1)
+    else:
+        avg_score = 0
+    
+    # Calculate time spent (last 30 days)
+    thirty_days_ago = datetime.now() - timedelta(days=30)
+    recent_quizzes = Score.query.filter(
+        Score.user_id == current_user.id,
+        Score.timestamp >= thirty_days_ago
+    ).all()
+    
+    total_time = 0
+    for score in recent_quizzes:
+        quiz_duration = score.quiz.time_duration
+        if quiz_duration:
+            hours, minutes = map(int, quiz_duration.split(':'))
+            total_time += hours * 60 + minutes
+    
+    time_spent = round(total_time / 60, 1)  # Convert to hours
+    
+    # Get available quizzes (not attempted by user)
+    attempted_quiz_ids = [score.quiz_id for score in current_user.scores]
+    available_quizzes = Quiz.query.filter(~Quiz.id.in_(attempted_quiz_ids)).all()
+    
+    # Get subject progress
+    subject_progress = []
     subjects = Subject.query.all()
-    scores = Score.query.filter_by(user_id=current_user.id).all()
-    return render_template('user_dashboard.html', subjects=subjects, scores=scores)
+    for subject in subjects:
+        quiz_ids = []
+        for chapter in subject.chapters:
+            quiz_ids.extend([quiz.id for quiz in chapter.quizzes])
+        
+        subject_scores = Score.query.filter(
+            Score.user_id == current_user.id,
+            Score.quiz_id.in_(quiz_ids)
+        ).all()
+        
+        if subject_scores:
+            avg = sum([(score.total_scored / score.total_questions) * 100 for score in subject_scores]) / len(subject_scores)
+            subject_progress.append({
+                'name': subject.name,
+                'avg_score': round(avg, 1)
+            })
+    
+    # Get recent activity
+    recent_activity = Score.query\
+        .filter_by(user_id=current_user.id)\
+        .order_by(Score.timestamp.desc())\
+        .limit(4).all()
+
+    return render_template('user_dashboard.html',
+        total_quizzes=total_quizzes,
+        avg_score=avg_score,
+        time_spent=time_spent,
+        available_quizzes=available_quizzes,
+        subject_progress=subject_progress,
+        recent_activity=recent_activity
+    )
 
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
 @login_required

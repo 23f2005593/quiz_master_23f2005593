@@ -11,7 +11,6 @@ class LoginForm(FlaskForm):
 class RegistrationForm(FlaskForm):
     username = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     full_name = StringField('Full Name', validators=[DataRequired()])
     qualification = StringField('Qualification')
     dob = DateField('Date of Birth', format='%Y-%m-%d')
