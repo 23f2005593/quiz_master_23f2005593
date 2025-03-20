@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Quiz Master{% endblock %}
+
+{% block styles %}
+<style>
+    .welcome-section {
+        background: linear-gradient(135deg, #4C51BF, #63B3ED);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-box {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .stat-box:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        background: #E9ECEF;
+    }
+
+    .subject-card {
+        background: white;
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+    }
+
+    .subject-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-start {
+        background: #4C51BF;
+        color: white;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-start:hover {
+        background: #63B3ED;
+        color: white;
+    }
+
+    .progress-bar-custom {
+        height: 6px;
+        border-radius: 3px;
+        background: #E2E8F0;
+    }
+
+    .progress-fill {
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(to right, #4C51BF, #63B3ED);
+        transition: width 0.3s ease;
+    }
+
+    .activity-entry {
+        padding: 1rem;
+        border-radius: 8px;
+        background: white;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .activity-entry:hover {
+        background: #F7FAFC;
+        transform: translateX(5px);
+    }
+
+    @media (max-width: 768px) {
+        .welcome-section {
+            padding: 1.5rem;
+        }
+        .stat-box {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div class="welcome-section">
+    <div class="row align-items-center">
+        <div class="col-md-8">
+            <h2 class="mb-2"><i class="fas fa-rocket me-2"></i>Welcome, {{ current_user.full_name }}!</h2>
+            <p class="mb-0 opacity-75">Let’s ace some quizzes today!</p>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+            <a href="#" class="btn btn-light me-2"><i class="fas fa-play me-1"></i>Start Quiz</a>
+            <a href="{{ url_for('view_scores') }}" class="btn btn-outline-light"><i class="fas fa-chart-bar me-1"></i>Scores</a>
+        </div>
+    </div>
+</div>
+
+<!-- Stats Overview -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="stat-box">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="fas fa-book-open text-primary"></i></div>
+                <div>
+                    <p class="text-muted mb-0">Quizzes Taken</p>
+                    <h4 class="mb-0">{{ recent_scores|length }}</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-box">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="fas fa-percentage text-success"></i></div>
+                <div>
+                    <p class="text-muted mb-0">Avg Score</p>
+                    <h4 class="mb-0">
+                        {% if recent_scores|length > 0 %}
+                            {{ (recent_scores|map(attribute='total_scored')|sum / (recent_scores|map(attribute='total_questions')|sum + 0.01) * 100)|round(1) }}%
+                        {% else %}
+                            0%
+                        {% endif %}
+                    </h4>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-box">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="fas fa-clock text-info"></i></div>
+                <div>
+                    <p class="text-muted mb-0">Time Spent</p>
+                    <h4 class="mb-0">2h 30m</h4> <!-- Placeholder; replace with real data -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6">
+        <div class="stat-box">
+            <div class="d-flex align-items-center">
+                <div class="stat-icon me-3"><i class="fas fa-trophy text-warning"></i></div>
+                <div>
+                    <p class="text-muted mb-0">Badges</p>
+                    <h4 class="mb-0">5</h4> <!-- Placeholder -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Content -->
+<div class="row g-4">
+    <!-- Subjects List -->
+    <div class="col-lg-8">
+        <div class="subject-card">
+            <h4 class="mb-4"><i class="fas fa-folder-open me-2"></i>Available Subjects</h4>
+            {% if subjects %}
+                {% for subject in subjects %}
+                    <div class="subject-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-1">{{ subject.name }}</h5>
+                                <p class="text-muted mb-2">{{ subject.description|truncate(100) }}</p>
+                            </div>
+                            <a href="{{ url_for('view_subject', subject_id=subject.id) }}" class="btn btn-start">Explore</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted"><i class="fas fa-info-circle me-2"></i>No subjects available yet.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+        <!-- Progress -->
+        <div class="subject-card">
+            <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Progress</h4>
+            {% if recent_scores %}
+                {% for score in recent_scores[:3] %}
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>{{ score.quiz.chapter.name }}</span>
+                            <span>{{ (score.total_scored / score.total_questions * 100)|round(1) }}%</span>
+                        </div>
+                        <div class="progress-bar-custom">
+                            <div class="progress-fill" data-width="{{ (score.total_scored / score.total_questions * 100)|default(0)|round(1) }}%"></div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No progress to show yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="subject-card">
+            <h4 class="mb-4"><i class="fas fa-history me-2"></i>Recent Activity</h4>
+            {% if recent_scores %}
+                {% for score in recent_scores[:3] %}
+                    <div class="activity-entry">
+                        <p class="mb-1">{{ score.quiz.chapter.subject.name }} - {{ score.quiz.chapter.name }}</p>
+                        <small class="text-muted">Score: {{ score.total_scored }}/{{ score.total_questions }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-muted">No recent activity.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll for internal links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Set progress width from data attribute
+        document.querySelectorAll('.progress-fill').forEach(progress => {
+            progress.style.width = progress.getAttribute('data-width');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome to Quiz Master{% endblock %}
+
+{% block content %}
+<div class="row align-items-center py-5">
+    <div class="col-md-6">
+        <h1 class="display-4 fw-bold">Welcome to Quiz Master</h1>
+        <p class="lead">Prepare for exams with interactive quizzes across multiple subjects.</p>
+        <div class="mt-4">
+            {% if current_user.is_authenticated %}
+                {% if current_user.is_admin %}
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                {% else %}
+                    <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary btn-lg">Go to Dashboard</a>
+                {% endif %}
+            {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-2">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <img src="https://cdn.pixabay.com/photo/2018/09/04/10/27/learn-3653430_1280.jpg" alt="Quiz Master" class="img-fluid rounded shadow">
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Multiple Subjects</h5>
+                <p class="card-text">Access quizzes from various subjects to enhance your knowledge.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Track Your Progress</h5>
+                <p class="card-text">Monitor your performance and see how you improve over time.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body">
+                <h5 class="card-title">Interactive Quizzes</h5>
+                <p class="card-text">Engage with interactive quizzes designed to test your knowledge effectively.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
