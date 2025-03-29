@@ -1,5 +1,3 @@
-// Common JavaScript functions for Quiz Master
-
 // Confirm delete actions
 function confirmDelete(message) {
     return confirm(message || 'Are you sure you want to delete this item?');

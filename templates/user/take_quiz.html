@@ -14,76 +14,114 @@
         font-size: 1.2rem;
         font-weight: bold;
     }
+    .result-box {
+        margin: 30px auto;
+        max-width: 600px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        text-align: center;
+        background-color: #f8f9fa;
+    }
+    .score-display {
+        font-size: 2rem;
+        margin: 20px 0;
+    }
+    .percentage-display {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ quiz.chapter.name }} Quiz</h1>
-    <div id="quiz-timer" class="text-danger">Time remaining: Loading...</div>
-</div>
-
-<form id="quiz-form" method="POST" action="{{ url_for('take_quiz', quiz_id=quiz.id) }}">
-    <div class="progress mb-4">
-        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+{% if submitted %}
+    <!-- Result box after submission -->
+    <div class="result-box">
+        <h2>Quiz Results</h2>
+        <div class="score-display">
+            Your Score: <strong>{{ score }}/{{ total_questions }}</strong>
+        </div>
+        <div class="percentage-display">
+            {{ percentage }}% Correct
+        </div>
+        
+        <div class="mt-4">
+            <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+            <!-- Remove the view_quiz link or replace with a valid endpoint -->
+        </div>
+    </div>
+{% else %}
+    <!-- Quiz questions form -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>{{ quiz.chapter.name }} Quiz</h1>
+        <div id="quiz-timer" class="text-danger">Time remaining: Loading...</div>
     </div>
 
-    {% for question in questions %}
-        <div id="question-{{ loop.index }}" class="card question-card {% if loop.first %}active{% endif %} mb-4">
-            <div class="card-header bg-primary text-white d-flex justify-content-between">
-                <h5 class="mb-0">Question {{ loop.index }} of {{ questions|length }}</h5>
-            </div>
-            <div class="card-body">
-                <h5 class="card-title">{{ question.question_statement }}</h5>
-                <div class="mt-4">
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option1_{{ question.id }}" value="1" required>
-                        <label class="form-check-label" for="option1_{{ question.id }}">
-                            {{ question.option1 }}
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option2_{{ question.id }}" value="2">
-                        <label class="form-check-label" for="option2_{{ question.id }}">
-                            {{ question.option2 }}
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option3_{{ question.id }}" value="3">
-                        <label class="form-check-label" for="option3_{{ question.id }}">
-                            {{ question.option3 }}
-                        </label>
-                    </div>
-                    <div class="form-check mb-2">
-                        <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option4_{{ question.id }}" value="4">
-                        <label class="form-check-label" for="option4_{{ question.id }}">
-                            {{ question.option4 }}
-                        </label>
+    <form id="quiz-form" method="POST" action="{{ url_for('take_quiz', quiz_id=quiz.id) }}">
+        <div class="progress mb-4">
+            <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+
+        {% for question in questions %}
+            <div id="question-{{ loop.index }}" class="card question-card {% if loop.first %}active{% endif %} mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between">
+                    <h5 class="mb-0">Question {{ loop.index }} of {{ questions|length }}</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ question.question_statement }}</h5>
+                    <div class="mt-4">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option1_{{ question.id }}" value="1" required>
+                            <label class="form-check-label" for="option1_{{ question.id }}">
+                                {{ question.option1 }}
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option2_{{ question.id }}" value="2">
+                            <label class="form-check-label" for="option2_{{ question.id }}">
+                                {{ question.option2 }}
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option3_{{ question.id }}" value="3">
+                            <label class="form-check-label" for="option3_{{ question.id }}">
+                                {{ question.option3 }}
+                            </label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="question_{{ question.id }}" id="option4_{{ question.id }}" value="4">
+                            <label class="form-check-label" for="option4_{{ question.id }}">
+                                {{ question.option4 }}
+                            </label>
+                        </div>
                     </div>
                 </div>
+                <div class="card-footer d-flex justify-content-between">
+                    {% if not loop.first %}
+                        <button type="button" class="btn btn-secondary prev-question" data-question="{{ loop.index }}">Previous</button>
+                    {% else %}
+                        <span></span>
+                    {% endif %}
+                    
+                    {% if not loop.last %}
+                        <button type="button" class="btn btn-primary next-question" data-question="{{ loop.index }}">Next</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-success">Submit Quiz</button>
+                    {% endif %}
+                </div>
             </div>
-            <div class="card-footer d-flex justify-content-between">
-                {% if not loop.first %}
-                    <button type="button" class="btn btn-secondary prev-question" data-question="{{ loop.index }}">Previous</button>
-                {% else %}
-                    <span></span>
-                {% endif %}
-                
-                {% if not loop.last %}
-                    <button type="button" class="btn btn-primary next-question" data-question="{{ loop.index }}">Next</button>
-                {% else %}
-                    <button type="submit" class="btn btn-success">Submit Quiz</button>
-                {% endif %}
-            </div>
-        </div>
-    {% endfor %}
-</form>
+        {% endfor %}
+    </form>
+{% endif %}
 {% endblock %}
 
 {% block scripts %}
+{% if not submitted %}
 <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
 <script>
     // Initialize quiz with parameters
     initializeQuiz("{{ questions|length }}", "{{ quiz.time_duration }}");
 </script>
+{% endif %}
 {% endblock %}

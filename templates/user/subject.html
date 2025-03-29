@@ -2,45 +2,378 @@
 
 {% block title %}{{ subject.name }} - Quiz Master{% endblock %}
 
+{% block styles %}
+<style>
+    .subject-header {
+        background: linear-gradient(135deg, #4C51BF, #63B3ED);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .subject-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E") repeat;
+        opacity: 0.2;
+    }
+
+    .subject-info-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        border: none;
+    }
+
+    .subject-info-header {
+        background: #F8FAFC;
+        padding: 1.5rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+    .subject-description {
+        padding: 1.5rem;
+        line-height: 1.7;
+        color: #4A5568;
+    }
+
+    .chapter-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+        border: none;
+    }
+
+    .chapter-header {
+        background: #F8FAFC;
+        padding: 1.5rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+    .chapter-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .chapter-card {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        border: 1px solid #E2E8F0;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chapter-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .chapter-card-color-bar {
+        height: 6px;
+    }
+
+    .color-1 .chapter-card-color-bar { background: linear-gradient(90deg, #4C51BF, #63B3ED); }
+    .color-2 .chapter-card-color-bar { background: linear-gradient(90deg, #38B2AC, #4FD1C5); }
+    .color-3 .chapter-card-color-bar { background: linear-gradient(90deg, #ED8936, #F6AD55); }
+    .color-4 .chapter-card-color-bar { background: linear-gradient(90deg, #805AD5, #B794F4); }
+    .color-5 .chapter-card-color-bar { background: linear-gradient(90deg, #3182CE, #63B3ED); }
+    .color-6 .chapter-card-color-bar { background: linear-gradient(90deg, #DD6B20, #F6AD55); }
+
+    .chapter-card-header {
+        padding: 1.2rem;
+        border-bottom: 1px solid #E2E8F0;
+        background: #F8FAFC;
+    }
+
+    .chapter-card-body {
+        padding: 1.2rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chapter-card-footer {
+        padding: 1.2rem;
+        background: #F8FAFC;
+        border-top: 1px solid #E2E8F0;
+    }
+
+    .chapter-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+    }
+
+    .color-1 .chapter-icon { background: #EBF4FF; color: #4C51BF; }
+    .color-2 .chapter-icon { background: #E6FFFA; color: #38B2AC; }
+    .color-3 .chapter-icon { background: #FEEBC8; color: #ED8936; }
+    .color-4 .chapter-icon { background: #E9D8FD; color: #805AD5; }
+    .color-5 .chapter-icon { background: #BEE3F8; color: #3182CE; }
+    .color-6 .chapter-icon { background: #FEEBC8; color: #DD6B20; }
+
+    .chapter-meta {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1rem;
+    }
+
+    .chapter-meta-item {
+        display: flex;
+        align-items: center;
+        color: #718096;
+        font-size: 0.9rem;
+    }
+
+    .chapter-meta-icon {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: #F7FAFC;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.5rem;
+        color: #4A5568;
+    }
+
+    .chapter-description {
+        color: #718096;
+        margin-top: 1rem;
+        flex-grow: 1;
+    }
+
+    .btn-back {
+        background: #EBF4FF;
+        color: #4C51BF;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn-back:hover {
+        background: #4C51BF;
+        color: white;
+    }
+
+    .btn-view-chapter {
+        background: #4C51BF;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-weight: 500;
+    }
+
+    .btn-view-chapter:hover {
+        background: #63B3ED;
+        color: white;
+    }
+
+    .subject-stats {
+        display: flex;
+        gap: 1.5rem;
+        margin-top: 1rem;
+    }
+
+    .subject-stat-item {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .subject-stat-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.75rem;
+    }
+
+    .subject-stat-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 0;
+    }
+
+    .subject-stat-label {
+        font-size: 0.8rem;
+        opacity: 0.9;
+        margin-bottom: 0;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: #A0AEC0;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .subject-header {
+            padding: 1.5rem;
+        }
+        .chapter-grid {
+            grid-template-columns: 1fr;
+        }
+        .subject-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ subject.name }}</h1>
-    <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
-</div>
-
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">Subject Description</h5>
+<!-- Subject Header -->
+<div class="subject-header">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="mb-0">{{ subject.name }}</h1>
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-back">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
     </div>
-    <div class="card-body">
-        <p>{{ subject.description }}</p>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header bg-success text-white">
-        <h5 class="mb-0">Chapters</h5>
-    </div>
-    <div class="card-body">
-        {% if subject.chapters %}
-            <div class="row">
+    
+    <p class="mb-3 opacity-80">{% if subject.description %}
+        {{ subject.description }}
+    {% else %}
+        <p class="text-muted">No description available for this subject.</p>
+    {% endif %}</p>
+    
+    <div class="subject-stats">
+        <div class="subject-stat-item">
+            <div class="subject-stat-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <div>
+                <p class="subject-stat-value">{{ subject.chapters|length }}</p>
+                <p class="subject-stat-label">Chapters</p>
+            </div>
+        </div>
+        
+        <div class="subject-stat-item">
+            <div class="subject-stat-icon">
+                <i class="fas fa-tasks"></i>
+            </div>
+            <div>
+                {% set quiz_count = namespace(total=0) %}
                 {% for chapter in subject.chapters %}
-                    <div class="col-md-6 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ chapter.name }}</h5>
-                                <p class="card-text">{{ chapter.description|truncate(100) }}</p>
-                                <a href="{{ url_for('view_chapter', chapter_id=chapter.id) }}" class="btn btn-primary">View Quizzes</a>
-                            </div>
-                        </div>
-                    </div>
+                    {% set quiz_count.total = quiz_count.total + chapter.quizzes|length %}
                 {% endfor %}
+                <p class="subject-stat-value">{{ quiz_count.total }}</p>
+                <p class="subject-stat-label">Quizzes</p>
             </div>
-        {% else %}
-            <div class="alert alert-info">
-                No chapters available for this subject yet.
+        </div>
+        
+        {% if subject.created_at %}
+        <div class="subject-stat-item">
+            <div class="subject-stat-icon">
+                <i class="fas fa-calendar-alt"></i>
             </div>
+            <div>
+                <p class="subject-stat-value">{{ subject.created_at.strftime('%b %Y') }}</p>
+                <p class="subject-stat-label">Added</p>
+            </div>
+        </div>
         {% endif %}
     </div>
+</div>
+
+<!-- Chapters Container -->
+<div class="chapter-container">
+    <div class="chapter-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-layer-group me-2"></i>Chapters</h5>
+        <span class="badge bg-primary rounded-pill">{{ subject.chapters|length }} chapters</span>
+    </div>
+    
+    {% if subject.chapters %}
+        <div class="chapter-grid">
+            {% for chapter in subject.chapters %}
+                <div class="chapter-card color-{{ loop.index % 6 + 1 }}">
+                    <div class="chapter-card-color-bar"></div>
+                    <div class="chapter-card-header">
+                        <div class="d-flex align-items-center">
+                            <div class="chapter-icon">
+                                {% set icons = ['fas fa-bookmark', 'fas fa-lightbulb', 'fas fa-chart-line', 'fas fa-cube', 'fas fa-puzzle-piece', 'fas fa-cogs'] %}
+                                <i class="{{ icons[loop.index0 % icons|length] }}"></i>
+                            </div>
+                            <h5 class="mb-0">{{ chapter.name }}</h5>
+                        </div>
+                    </div>
+                    <div class="chapter-card-body">
+                        <div class="chapter-meta">
+                            <div class="chapter-meta-item">
+                                <div class="chapter-meta-icon">
+                                    <i class="fas fa-tasks"></i>
+                                </div>
+                                <span>{{ chapter.quizzes|length }} quizzes</span>
+                            </div>
+                            {% if chapter.created_at %}
+                            <div class="chapter-meta-item">
+                                <div class="chapter-meta-icon">
+                                    <i class="fas fa-calendar-day"></i>
+                                </div>
+                                <span>{{ chapter.created_at.strftime('%d %b %Y') }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="chapter-description">
+                            {% if chapter.description %}
+                                {{ chapter.description|truncate(120) }}
+                            {% else %}
+                                <span class="text-muted">No description available.</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="chapter-card-footer">
+                        <a href="{{ url_for('view_chapter', chapter_id=chapter.id) }}" class="btn btn-view-chapter">
+                            <i class="fas fa-chevron-right me-2"></i>Explore Chapter
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-book"></i>
+            </div>
+            <h4>No Chapters Available</h4>
+            <p class="text-muted">There are no chapters available for this subject yet. Check back later!</p>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

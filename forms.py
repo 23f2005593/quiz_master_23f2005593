@@ -28,11 +28,21 @@ class ChapterForm(FlaskForm):
     subject_id = SelectField('Subject', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Save')
 
+# forms.py (updated)
+
+from wtforms import DateTimeLocalField
+
 class QuizForm(FlaskForm):
     date_of_quiz = DateField('Date of Quiz', validators=[DataRequired()])
     time_duration = StringField('Time Duration (HH:MM)', validators=[DataRequired()])
+    start_time = DateTimeLocalField('Start Time', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
+    end_time = DateTimeLocalField('End Time', format='%Y-%m-%dT%H:%M', validators=[DataRequired()])
     remarks = TextAreaField('Remarks')
     submit = SubmitField('Save')
+    
+    def validate_end_time(self, end_time):
+        if end_time.data <= self.start_time.data:
+            raise ValidationError('End time must be after start time')
 
 class QuestionForm(FlaskForm):
     question_statement = TextAreaField('Question', validators=[DataRequired()])
@@ -45,3 +55,18 @@ class QuestionForm(FlaskForm):
 
 class QuizAttemptForm(FlaskForm):
     submit = SubmitField('Submit Quiz')
+
+class UserForm(FlaskForm):
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    full_name = StringField('Full Name', validators=[DataRequired()])
+    qualification = StringField('Qualification')
+    dob = DateField('Date of Birth', format='%Y-%m-%d')
+    is_admin = RadioField('User Role', choices=[(False, 'Regular User'), (True, 'Administrator')], 
+                         coerce=lambda x: x == 'True', default=False)
+    submit = SubmitField('Save User')
+    
+    def validate_dob(self, dob):
+        if dob.data and dob.data > date.today():
+            raise ValidationError('Date of birth cannot be in the future')    

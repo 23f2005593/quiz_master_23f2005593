@@ -36,18 +36,87 @@
         background: #E9ECEF;
     }
 
-    .subject-card {
+    .subject-container {
         background: white;
         border-radius: 10px;
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .subject-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+        margin-top: 1.5rem;
+    }
+
+    .subject-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
         transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid #E2E8F0;
     }
 
     .subject-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-8px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .subject-color-bar {
+        height: 8px;
+        background: linear-gradient(90deg, #4C51BF, #63B3ED);
+    }
+
+    .subject-icon {
+        width: 50px;
+        height: 50px;
+        background: #EBF4FF;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #4C51BF;
+        margin-bottom: 1rem;
+    }
+
+    .subject-content {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .subject-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #2D3748;
+        margin-bottom: 0.5rem;
+    }
+
+    .subject-description {
+        color: #718096;
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+        flex-grow: 1;
+    }
+
+    .subject-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+    }
+
+    .subject-stat {
+        font-size: 0.8rem;
+        color: #718096;
     }
 
     .btn-start {
@@ -57,6 +126,7 @@
         padding: 0.5rem 1.5rem;
         border-radius: 20px;
         transition: all 0.3s ease;
+        font-size: 0.9rem;
     }
 
     .btn-start:hover {
@@ -90,12 +160,94 @@
         transform: translateX(5px);
     }
 
+    .search-container {
+        margin-bottom: 2rem;
+    }
+
+    .search-input {
+        border-radius: 20px;
+        padding-left: 2.5rem;
+        border: 1px solid #E2E8F0;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #A0AEC0;
+    }
+
+    .search-results {
+        position: absolute;
+        width: 100%;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+    }
+
+    .search-result-item {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #E2E8F0;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .search-result-item:hover {
+        background: #F7FAFC;
+    }
+
+    .search-result-item:last-child {
+        border-bottom: none;
+    }
+
+    .search-result-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.5rem;
+        border-radius: 10px;
+        margin-left: 0.5rem;
+    }
+
+    .tag-subject {
+        background: #EBF8FF;
+        color: #3182CE;
+    }
+
+    .tag-quiz {
+        background: #E9D8FD;
+        color: #805AD5;
+    }
+
+    /* Subject card colors for variety */
+    .color-1 .subject-color-bar { background: linear-gradient(90deg, #4C51BF, #63B3ED); }
+    .color-2 .subject-color-bar { background: linear-gradient(90deg, #38B2AC, #4FD1C5); }
+    .color-3 .subject-color-bar { background: linear-gradient(90deg, #ED8936, #F6AD55); }
+    .color-4 .subject-color-bar { background: linear-gradient(90deg, #805AD5, #B794F4); }
+    .color-5 .subject-color-bar { background: linear-gradient(90deg, #3182CE, #63B3ED); }
+    .color-6 .subject-color-bar { background: linear-gradient(90deg, #DD6B20, #F6AD55); }
+    
+    .color-1 .subject-icon { background: #EBF4FF; color: #4C51BF; }
+    .color-2 .subject-icon { background: #E6FFFA; color: #38B2AC; }
+    .color-3 .subject-icon { background: #FEEBC8; color: #ED8936; }
+    .color-4 .subject-icon { background: #E9D8FD; color: #805AD5; }
+    .color-5 .subject-icon { background: #BEE3F8; color: #3182CE; }
+    .color-6 .subject-icon { background: #FEEBC8; color: #DD6B20; }
+
     @media (max-width: 768px) {
         .welcome-section {
             padding: 1.5rem;
         }
         .stat-box {
             margin-bottom: 1rem;
+        }
+        .subject-grid {
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1rem;
         }
     }
 </style>
@@ -107,7 +259,7 @@
     <div class="row align-items-center">
         <div class="col-md-8">
             <h2 class="mb-2"><i class="fas fa-rocket me-2"></i>Welcome, {{ current_user.full_name }}!</h2>
-            <p class="mb-0 opacity-75">Let’s ace some quizzes today!</p>
+            <p class="mb-0 opacity-75">Let's ace some quizzes today!</p>
         </div>
         <div class="col-md-4 text-md-end mt-3 mt-md-0">
             <a href="#" class="btn btn-light me-2"><i class="fas fa-play me-1"></i>Start Quiz</a>
@@ -116,8 +268,19 @@
     </div>
 </div>
 
+<!-- Search Bar -->
+<div class="search-container">
+    <div class="position-relative">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="searchInput" class="form-control search-input" placeholder="Search for subjects or quizzes...">
+        <div id="searchResults" class="search-results">
+            <!-- Search results will be populated here -->
+        </div>
+    </div>
+</div>
+
 <!-- Stats Overview -->
-<div class="row g-3 mb-4">
+<!-- <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
         <div class="stat-box">
             <div class="d-flex align-items-center">
@@ -157,71 +320,57 @@
             </div>
         </div>
     </div>
-    <div class="col-md-3 col-6">
-        <div class="stat-box">
-            <div class="d-flex align-items-center">
-                <div class="stat-icon me-3"><i class="fas fa-trophy text-warning"></i></div>
-                <div>
-                    <p class="text-muted mb-0">Badges</p>
-                    <h4 class="mb-0">5</h4> <!-- Placeholder -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+    
+</div> -->
 
 <!-- Main Content -->
 <div class="row g-4">
-    <!-- Subjects List -->
+    <!-- Subjects List with improved UI -->
     <div class="col-lg-8">
-        <div class="subject-card">
-            <h4 class="mb-4"><i class="fas fa-folder-open me-2"></i>Available Subjects</h4>
+        <div class="subject-container">
+            <h4 class="mb-3"><i class="fas fa-folder-open me-2"></i>Available Subjects</h4>
+            
             {% if subjects %}
-                {% for subject in subjects %}
-                    <div class="subject-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-1">{{ subject.name }}</h5>
-                                <p class="text-muted mb-2">{{ subject.description|truncate(100) }}</p>
+                <div class="subject-grid">
+                    {% for subject in subjects %}
+                        <div class="subject-card color-{{ loop.index % 6 + 1 }}">
+                            <div class="subject-color-bar"></div>
+                            <div class="subject-content">
+                                <div class="subject-icon">
+                                    {% set icons = ['fas fa-calculator', 'fas fa-atom', 'fas fa-book', 'fas fa-globe-americas', 'fas fa-laptop-code', 'fas fa-palette', 'fas fa-microscope', 'fas fa-language'] %}
+                                    <i class="{{ icons[loop.index0 % icons|length] }}"></i>
+                                </div>
+                                <h5 class="subject-title">{{ subject.name }}</h5>
+                                <p class="subject-description">{{ subject.description|truncate(80) }}</p>
+                                <div class="subject-footer">
+                                    <span class="subject-stat">
+                                        <i class="fas fa-book-open me-1"></i> {{ subject.chapters|length }} chapters
+                                    </span>
+                                    <a href="{{ url_for('view_subject', subject_id=subject.id) }}" class="btn btn-start">Explore</a>
+                                </div>
                             </div>
-                            <a href="{{ url_for('view_subject', subject_id=subject.id) }}" class="btn btn-start">Explore</a>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                </div>
             {% else %}
-                <p class="text-muted"><i class="fas fa-info-circle me-2"></i>No subjects available yet.</p>
+                <div class="text-center py-5">
+                    <i class="fas fa-books fa-3x text-muted mb-3"></i>
+                    <p class="text-muted">No subjects available yet.</p>
+                    <p class="text-muted small">Check back later for new content!</p>
+                </div>
             {% endif %}
         </div>
     </div>
 
     <!-- Sidebar -->
     <div class="col-lg-4">
-        <!-- Progress -->
-        <div class="subject-card">
-            <h4 class="mb-4"><i class="fas fa-chart-line me-2"></i>Progress</h4>
-            {% if recent_scores %}
-                {% for score in recent_scores[:3] %}
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between mb-1">
-                            <span>{{ score.quiz.chapter.name }}</span>
-                            <span>{{ (score.total_scored / score.total_questions * 100)|round(1) }}%</span>
-                        </div>
-                        <div class="progress-bar-custom">
-                            <div class="progress-fill" data-width="{{ (score.total_scored / score.total_questions * 100)|default(0)|round(1) }}%"></div>
-                        </div>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p class="text-muted">No progress to show yet.</p>
-            {% endif %}
-        </div>
-
+        
         <!-- Recent Activity -->
-        <div class="subject-card">
-            <h4 class="mb-4"><i class="fas fa-history me-2"></i>Recent Activity</h4>
+        <div class="subject-container">
+            <h4 class="mb-3"><i class="fas fa-history me-2"></i>Recent Activity</h4>
             {% if recent_scores %}
                 {% for score in recent_scores[:3] %}
-                    <div class="activity-entry">
+                    <div class="activity-entry mb-1 border border-2">
                         <p class="mb-1">{{ score.quiz.chapter.subject.name }} - {{ score.quiz.chapter.name }}</p>
                         <small class="text-muted">Score: {{ score.total_scored }}/{{ score.total_questions }}</small>
                     </div>
@@ -232,25 +381,31 @@
         </div>
     </div>
 </div>
+
+<!-- Hidden data for search functionality -->
+<div id="searchData" style="display: none;">
+    <!-- Subjects data -->
+    {% for subject in subjects %}
+    <div class="search-subject-data" 
+         data-id="{{ subject.id }}" 
+         data-name="{{ subject.name }}"
+         data-url="{{ url_for('view_subject', subject_id=subject.id) }}">
+        <!-- Quizzes within this subject -->
+        {% for chapter in subject.chapters %}
+            {% for quiz in chapter.quizzes %}
+            <div class="search-quiz-data"
+                 data-id="{{ quiz.id }}"
+                 data-name="{{ quiz.title }}"
+                 data-chapter="{{ chapter.name }}"
+                 data-url="{{ url_for('take_quiz', quiz_id=quiz.id) }}">
+            </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block scripts %}
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Smooth scroll for internal links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-        
-        // Set progress width from data attribute
-        document.querySelectorAll('.progress-fill').forEach(progress => {
-            progress.style.width = progress.getAttribute('data-width');
-        });
-    });
-</script>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
 {% endblock %}

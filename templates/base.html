@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -146,7 +147,10 @@
                     {% if current_user.is_authenticated %}
                         {% if current_user.is_admin %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('admin_summary.admin_summary') }}"><i class="fas fa-bar-chart me-1"></i>Summary</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('subjects') }}"><i class="fas fa-book me-1"></i>Subjects</a>
@@ -157,12 +161,16 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('quizzes') }}"><i class="fas fa-question-circle me-1"></i>Quizzes</a>
                             </li>
+                            
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('user_dashboard') }}"><i class="fas fa-home me-1"></i>Dashboard</a>
+                                <a class="nav-link" href="{{ url_for('user_dashboard') }}"><i class="fas fa-home me-1"></i>Home</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url_for('view_scores') }}"><i class="fas fa-star me-1"></i>Scores</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('user_summary.summary') }}"><i class="fas fa-bar-chart me-1"></i>Summary</a>
                             </li>
                         {% endif %}
                         <li class="nav-item">
@@ -175,6 +183,7 @@
                         <li class="nav-item">
                             <a class="nav-link btn-action" href="{{ url_for('register') }}"><i class="fas fa-user-plus me-1"></i>Register</a>
                         </li>
+                        
                     {% endif %}
                 </ul>
             </div>

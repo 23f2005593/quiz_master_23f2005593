@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz Timer - Quiz Master{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow text-center">
+                <div class="card-header bg-primary text-white">
+                    <h3>Quiz Availability</h3>
+                </div>
+                <div class="card-body">
+                    {% if expired %}
+                        <div class="alert alert-danger">
+                            <h4><i class="fas fa-clock me-2"></i>Quiz Time Expired</h4>
+                            <p>This quiz is no longer available for attempt. The time window has passed.</p>
+                            <p>Quiz was available from: <br>
+                               <strong>{{ quiz.start_time.strftime('%B %d, %Y at %I:%M %p') }}</strong> to 
+                               <strong>{{ quiz.end_time.strftime('%B %d, %Y at %I:%M %p') }}</strong>
+                            </p>
+                        </div>
+                        <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">
+                            <i class="fas fa-home me-1"></i> Return to Dashboard
+                        </a>
+                    {% else %}
+                        <h4>{{ quiz.chapter.name }} - {{ quiz.chapter.subject.name }}</h4>
+                        <p class="text-muted">The quiz will be available in:</p>
+                        
+                        <div class="countdown-timer my-4">
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h1 id="days">00</h1>
+                                            <p>Days</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h1 id="hours">00</h1>
+                                            <p>Hours</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h1 id="minutes">00</h1>
+                                            <p>Minutes</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="card bg-light">
+                                        <div class="card-body">
+                                            <h1 id="seconds">00</h1>
+                                            <p>Seconds</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="quiz-info mt-4">
+                            <p>Quiz will be available from: <br>
+                               <strong>{{ quiz.start_time.strftime('%B %d, %Y at %I:%M %p') }}</strong> to 
+                               <strong>{{ quiz.end_time.strftime('%B %d, %Y at %I:%M %p') }}</strong>
+                            </p>
+                            <p>Duration: <strong>{{ quiz.time_duration }}</strong></p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+                            </a>
+                            <a id="start-quiz-btn" href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" 
+                               class="btn btn-success d-none">
+                                <i class="fas fa-play me-1"></i> Start Quiz
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if not expired %}
+<script>
+    // Set the date we're counting down to
+    const countDownDate = new Date("{{ quiz.start_time.isoformat() }}").getTime();
+    
+    // Get quiz URL for redirection
+    const quizURL = "{{ url_for('take_quiz', quiz_id=quiz.id) }}";
+    
+    // Update the countdown every 1 second
+    const x = setInterval(function() {
+        // Get current time
+        const now = new Date().getTime();
+        
+        // Find the distance between now and the countdown date
+        const distance = countDownDate - now;
+        
+        // Time calculations for days, hours, minutes and seconds
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        // Display the result
+        document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
+        document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
+        document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
+        document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
+        
+        // If the countdown is finished, redirect to quiz
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("days").innerHTML = "00";
+            document.getElementById("hours").innerHTML = "00";
+            document.getElementById("minutes").innerHTML = "00";
+            document.getElementById("seconds").innerHTML = "00";
+            
+            // Show the start quiz button
+            document.getElementById("start-quiz-btn").classList.remove("d-none");
+            
+            // Auto redirect after 3 seconds
+            setTimeout(function() {
+                window.location.href = quizURL;
+            }, 3000);
+        }
+    }, 1000);
+</script>
+{% endif %}
+{% endblock %}

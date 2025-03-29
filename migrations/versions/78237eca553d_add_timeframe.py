@@ -1,8 +1,8 @@
-"""Initial migration
+"""add timeframe
 
-Revision ID: e8d9eee85fbb
+Revision ID: 78237eca553d
 Revises: 
-Create Date: 2025-03-20 11:08:59.367157
+Create Date: 2025-03-29 19:21:48.812014
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e8d9eee85fbb'
+revision = '78237eca553d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -48,6 +48,8 @@ def upgrade():
     sa.Column('chapter_id', sa.Integer(), nullable=False),
     sa.Column('date_of_quiz', sa.Date(), nullable=False),
     sa.Column('time_duration', sa.String(length=5), nullable=False),
+    sa.Column('start_time', sa.DateTime(), nullable=False),
+    sa.Column('end_time', sa.DateTime(), nullable=False),
     sa.Column('remarks', sa.Text(), nullable=True),
     sa.ForeignKeyConstraint(['chapter_id'], ['chapter.id'], ),
     sa.PrimaryKeyConstraint('id')

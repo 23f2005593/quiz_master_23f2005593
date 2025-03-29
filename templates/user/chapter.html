@@ -2,59 +2,276 @@
 
 {% block title %}{{ chapter.name }} - Quiz Master{% endblock %}
 
+{% block styles %}
+<style>
+    .chapter-header {
+        background: linear-gradient(135deg, #4C51BF, #63B3ED);
+        color: white;
+        border-radius: 12px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .chapter-header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 150px;
+        height: 100%;
+        background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E") repeat;
+        opacity: 0.2;
+    }
+
+    .chapter-info-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 2rem;
+        overflow: hidden;
+        border: none;
+    }
+
+    .chapter-info-header {
+        background: #F8FAFC;
+        padding: 1.5rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+    .chapter-description {
+        padding: 1.5rem;
+        line-height: 1.7;
+        color: #4A5568;
+    }
+
+    .quiz-card {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        border: none;
+        margin-bottom: 2rem;
+    }
+
+    .quiz-header {
+        background: #F8FAFC;
+        padding: 1.5rem;
+        border-bottom: 1px solid #E2E8F0;
+    }
+
+    .quiz-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .quiz-item {
+        background: white;
+        border-radius: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        border: 1px solid #E2E8F0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .quiz-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .quiz-item-header {
+        padding: 1.2rem;
+        border-bottom: 1px solid #E2E8F0;
+        background: #F8FAFC;
+    }
+
+    .quiz-item-body {
+        padding: 1.2rem;
+        flex-grow: 1;
+    }
+
+    .quiz-item-footer {
+        padding: 1.2rem;
+        background: #F8FAFC;
+        border-top: 1px solid #E2E8F0;
+    }
+
+    .quiz-meta {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+    }
+
+    .quiz-meta-item {
+        display: flex;
+        align-items: center;
+        color: #718096;
+        font-size: 0.9rem;
+    }
+
+    .quiz-meta-icon {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #EBF4FF;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 0.5rem;
+        color: #4C51BF;
+    }
+
+    .badge-subject {
+        background: #EBF4FF;
+        color: #4C51BF;
+        font-weight: 500;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+    }
+
+    .btn-back {
+        background: #EBF4FF;
+        color: #4C51BF;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        font-weight: 500;
+    }
+
+    .btn-back:hover {
+        background: #4C51BF;
+        color: white;
+    }
+
+    .btn-take-quiz {
+        background: #4C51BF;
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        width: 100%;
+        font-weight: 500;
+    }
+
+    .btn-take-quiz:hover {
+        background: #63B3ED;
+        color: white;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1.5rem;
+    }
+
+    .empty-icon {
+        font-size: 3rem;
+        color: #A0AEC0;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        .chapter-header {
+            padding: 1.5rem;
+        }
+        .quiz-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>{{ chapter.name }}</h1>
-    <a href="{{ url_for('view_subject', subject_id=chapter.subject.id) }}" class="btn btn-secondary">Back to Subject</a>
+<!-- Chapter Header -->
+<div class="chapter-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <h1 class="mb-2">{{ chapter.name }}</h1>
+            <p class="mb-0 opacity-75">{% if chapter.description %}
+                {{ chapter.description }}
+            {% else %}
+                <p class="text-muted">No description available for this chapter.</p>
+            {% endif %}</p>
+        </div>
+        <a href="{{ url_for('view_subject', subject_id=chapter.subject.id) }}" class="btn btn-back">
+            <i class="fas fa-arrow-left me-2"></i>Back to Subject
+        </a>
+    </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-        <h5 class="mb-0">Chapter Details</h5>
-        <span class="badge bg-light text-dark">{{ chapter.subject.name }}</span>
+<!-- Quizzes Card -->
+<div class="quiz-card">
+    <div class="quiz-header d-flex justify-content-between align-items-center">
+        <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Available Quizzes</h5>
+        <span class="badge bg-primary rounded-pill">{{ chapter.quizzes|length }} quizzes</span>
     </div>
-    <div class="card-body">
-        <p>{{ chapter.description }}</p>
-    </div>
-</div>
-
-<div class="card">
-    <div class="card-header bg-success text-white">
-        <h5 class="mb-0">Available Quizzes</h5>
-    </div>
-    <div class="card-body">
-        {% if chapter.quizzes %}
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Quiz Date</th>
-                            <th>Duration</th>
-                            <th>Questions</th>
-                            <th>Remarks</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for quiz in chapter.quizzes %}
-                            <tr>
-                                <td>{{ quiz.date_of_quiz.strftime('%d-%m-%Y') }}</td>
-                                <td>{{ quiz.time_duration }}</td>
-                                <td>{{ quiz.questions|length }}</td>
-                                <td>{{ quiz.remarks|truncate(30) if quiz.remarks else 'N/A' }}</td>
-                                <td>
-                                    <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-sm btn-primary">View Quiz</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    
+    {% if chapter.quizzes %}
+        <div class="quiz-grid">
+            {% for quiz in chapter.quizzes %}
+                <div class="quiz-item">
+                    <div class="quiz-item-header">
+                        <h5 class="mb-0">Quiz #{{ loop.index }}</h5>
+                    </div>
+                    <div class="quiz-item-body">
+                        <div class="quiz-meta">
+                            <div class="quiz-meta-item">
+                                <div class="quiz-meta-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <span>{{ quiz.date_of_quiz.strftime('%d %b %Y') }}</span>
+                            </div>
+                            <div class="quiz-meta-item">
+                                <div class="quiz-meta-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <span>{{ quiz.time_duration }} min</span>
+                            </div>
+                        </div>
+                        <div class="quiz-meta">
+                            <div class="quiz-meta-item">
+                                <div class="quiz-meta-icon">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <span>{{ quiz.questions|length }} questions</span>
+                            </div>
+                            {% if quiz.total_marks %}
+                            <div class="quiz-meta-item">
+                                <div class="quiz-meta-icon">
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <span>{{ quiz.total_marks }} marks</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% if quiz.remarks %}
+                            <div class="mt-3">
+                                <h6 class="text-muted mb-1">Remarks:</h6>
+                                <p class="mb-0">{{ quiz.remarks|truncate(100) }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="quiz-item-footer">
+                        <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="btn btn-take-quiz">
+                            <i class="fas fa-play-circle me-2"></i>Take Quiz
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <i class="fas fa-clipboard-list"></i>
             </div>
-        {% else %}
-            <div class="alert alert-info">
-                No quizzes available for this chapter yet.
-            </div>
-        {% endif %}
-    </div>
+            <h4>No Quizzes Available</h4>
+            <p class="text-muted">There are no quizzes available for this chapter yet. Check back later!</p>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

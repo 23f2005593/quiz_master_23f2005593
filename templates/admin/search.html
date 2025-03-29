@@ -1,92 +1,8 @@
 {% extends "base.html" %}
 
-{% block title %}Admin Dashboard - Quiz Master{% endblock %}
+{% block title %}Admin - Search Results{% endblock %}
 
 {% block styles %}
-<style>
-    .dashboard-header {
-        font-size: 2rem;
-        font-weight: 700;
-        color: #2D3748;
-        margin-bottom: 2rem;
-    }
-
-    .stat-card {
-        border-radius: 12px;
-        padding: 1.5rem;
-        color: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-    }
-
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-    }
-
-    .stat-card h5 {
-        font-size: 1.1rem;
-        margin-bottom: 1rem;
-        opacity: 0.9;
-    }
-
-    .stat-card .display-num {
-        font-size: 2.5rem;
-        font-weight: 700;
-        line-height: 1;
-    }
-
-    .stat-card .btn {
-        background: rgba(255, 255, 255, 0.2);
-        border: none;
-        color: white;
-        padding: 0.5rem 1rem;
-        border-radius: 20px;
-        transition: all 0.3s ease;
-    }
-
-    .stat-card .btn:hover {
-        background: white;
-        color: #4C51BF;
-    }
-
-    .chart-card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-        transition: all 0.3s ease;
-    }
-
-    .chart-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .chart-card h5 {
-        font-size: 1.25rem;
-        color: #2D3748;
-        margin-bottom: 1rem;
-    }
-
-    .chart-container {
-        position: relative;
-        height: 300px;
-    }
-
-    @media (max-width: 768px) {
-        .dashboard-header {
-            font-size: 1.75rem;
-        }
-        .stat-card {
-            margin-bottom: 1rem;
-        }
-        .chart-container {
-            height: 250px;
-        }
-    }
-</style>
-
 <style>
     .search-header {
         background: linear-gradient(135deg, #4C51BF, #63B3ED);
@@ -127,48 +43,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1 class="dashboard-header"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h1>
-
-    <!-- Stats Section -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3 col-6">
-            <div class="stat-card" style="background: linear-gradient(135deg, #4C51BF, #63B3ED);">
-                <h5>Subjects</h5>
-                <p class="display-num">{{ subjects_count }}</p>
-                <a href="{{ url_for('subjects') }}" class="btn">Manage</a>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card" style="background: linear-gradient(135deg, #48BB78, #68D391);">
-                <h5>Chapters</h5>
-                <p class="display-num">{{ chapters_count }}</p>
-                <a href="{{ url_for('chapters') }}" class="btn">Manage</a>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card" style="background: linear-gradient(135deg, #00B5D8, #4FD1C5);">
-                <h5>Quizzes</h5>
-                <p class="display-num">{{ quizzes_count }}</p>
-                <a href="{{ url_for('quizzes') }}" class="btn">Manage</a>
-            </div>
-        </div>
-        <div class="col-md-3 col-6">
-            <div class="stat-card" style="background: linear-gradient(135deg, #ED8936, #F6AD55);">
-                <h5>Users</h5>
-                <p class="display-num">{{ users_count }}</p>
-                <a href="{{ url_for('admin_users.users') }}" class="btn">Manage</a>
-            </div>
-        </div>
-    </div>
-
 <div class="container mt-4">
     <!-- Search Header -->
     <div class="search-header text-center shadow">
         <h1><i class="fas fa-search me-2"></i>Admin Search</h1>
         <div class="row justify-content-center">
             <div class="col-md-8 mt-3">
-                <form method="GET" action="{{ url_for('admin_dashboard') }}">
+                <form method="GET" action="{{ url_for('admin_search.admin_search') }}">
                     <div class="input-group">
                         <input type="text" class="form-control form-control-lg" 
                                placeholder="Search for subjects, chapters, quizzes, or users..." 
@@ -349,9 +230,4 @@
     </div>
     {% endif %}
 </div>
-{% endblock %}
-
-{% block scripts %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
 {% endblock %}

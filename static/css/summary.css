@@ -1,0 +1,22 @@
+.chart-container {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.stats-card {
+    transition: transform 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.performance-badge {
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 20px;
+    margin-right: 10px;
+}

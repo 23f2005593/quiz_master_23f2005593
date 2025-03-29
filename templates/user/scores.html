@@ -8,8 +8,8 @@
     <a href="{{ url_for('user_dashboard') }}" class="btn btn-secondary">Back to Dashboard</a>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-8">
+<div class="mb-4">
+    <div>
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Score History</h5>
@@ -58,72 +58,10 @@
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Performance Summary</h5>
-            </div>
-            <div class="card-body">
-                {% if scores %}
-                    <canvas id="scoreDistributionChart"></canvas>
-                    
-                    {% set excellent_count = 0 %}
-                    {% set good_count = 0 %}
-                    {% set average_count = 0 %}
-                    {% set poor_count = 0 %}
-                    
-                    {% for score in scores %}
-                        {% set percentage = (score.total_scored / score.total_questions) * 100 %}
-                        {% if percentage >= 80 %}
-                            {% set excellent_count = excellent_count + 1 %}
-                        {% elif percentage >= 60 %}
-                            {% set good_count = good_count + 1 %}
-                        {% elif percentage >= 40 %}
-                            {% set average_count = average_count + 1 %}
-                        {% else %}
-                            {% set poor_count = poor_count + 1 %}
-                        {% endif %}
-                    {% endfor %}
-                    
-                    <div class="mt-4">
-                        <h6>Performance Breakdown</h6>
-                        <ul class="list-group">
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Excellent (80-100%)
-                                <span class="badge bg-success rounded-pill">{{ excellent_count }}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Good (60-79%)
-                                <span class="badge bg-info rounded-pill">{{ good_count }}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Average (40-59%)
-                                <span class="badge bg-warning rounded-pill">{{ average_count }}</span>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                Poor (0-39%)
-                                <span class="badge bg-danger rounded-pill">{{ poor_count }}</span>
-                            </li>
-                        </ul>
-                    </div>
-                {% else %}
-                    <div class="alert alert-info">
-                        No data available for performance summary.
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
+    
 </div>
 
-<!-- Hidden data elements for chart -->
-<div id="chart-data" 
-     data-excellent="{{ excellent_count if scores else 0 }}"
-     data-good="{{ good_count if scores else 0 }}"
-     data-average="{{ average_count if scores else 0 }}"
-     data-poor="{{ poor_count if scores else 0 }}"
-     data-has-scores="{{ 'true' if scores else 'false' }}">
-</div>
+
 {% endblock %}
 
 {% block scripts %}

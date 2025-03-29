@@ -34,6 +34,34 @@
                             </div>
                         {% endif %}
                     </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.start_time.label(class="form-label") }}
+                            {{ form.start_time(class="form-control", type="datetime-local") }}
+                            {% if form.start_time.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.start_time.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">When users can start attempting the quiz</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.end_time.label(class="form-label") }}
+                            {{ form.end_time(class="form-control", type="datetime-local") }}
+                            {% if form.end_time.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.end_time.errors %}
+                                        <small>{{ error }}</small>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <small class="text-muted">When the quiz will no longer be available</small>
+                        </div>
+                    </div>
+                    
                     <div class="mb-3">
                         {{ form.remarks.label(class="form-label") }}
                         {{ form.remarks(class="form-control", rows=3) }}

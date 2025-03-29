@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - User Management{% endblock %}
+
+{% block styles %}
+<style>
+    .user-actions {
+        white-space: nowrap;
+    }
+    
+    .search-container {
+        margin-bottom: 20px;
+    }
+    
+    .admin-badge {
+        background-color: #4C51BF;
+    }
+    
+    .user-badge {
+        background-color: #48BB78;
+    }
+    
+    .user-card {
+        transition: all 0.3s ease;
+    }
+    
+    .user-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-users me-2"></i>User Management</h1>
+        <a href="{{ url_for('admin_users.add_user') }}" class="btn btn-primary">
+            <i class="fas fa-user-plus me-1"></i> Add New User
+        </a>
+    </div>
+    
+    <!-- Search Bar -->
+    <div class="search-container">
+        <form method="GET" action="{{ url_for('admin_users.users') }}">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search users by name, email or qualification..." 
+                       name="search" value="{{ search_query }}">
+                <button class="btn btn-outline-primary" type="submit">
+                    <i class="fas fa-search"></i> Search
+                </button>
+                {% if search_query %}
+                <a href="{{ url_for('admin_users.users') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+    
+    <!-- User Count -->
+    <p class="text-muted mb-4">
+        <i class="fas fa-info-circle me-1"></i> 
+        Showing {{ users|length }} user{{ 's' if users|length != 1 }}
+        {% if search_query %}
+        for search "{{ search_query }}"
+        {% endif %}
+    </p>
+    
+    {% if users %}
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Qualification</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="user-card">
+                    <td>{{ user.full_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.qualification or 'N/A' }}</td>
+                    <td>
+                        {% if user.is_admin %}
+                        <span class="badge admin-badge">Admin</span>
+                        {% else %}
+                        <span class="badge user-badge">User</span>
+                        {% endif %}
+                    </td>
+                    <td class="user-actions">
+                        {% if user.id != current_user.id %}
+                        <form method="POST" action="{{ url_for('admin_users.delete_user', user_id=user.id) }}" 
+                              class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted small">(current user)</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>
+        No users found{% if search_query %} matching "{{ search_query }}"{% endif %}.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

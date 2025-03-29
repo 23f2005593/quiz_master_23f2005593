@@ -1,7 +1,9 @@
+
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from models import db, Quiz, Chapter
 from forms import QuizForm
+from datetime import datetime
 
 def register_routes(app):
     @app.route('/admin/quizzes')
@@ -29,6 +31,8 @@ def register_routes(app):
                 chapter_id=chapter.id,
                 date_of_quiz=form.date_of_quiz.data,
                 time_duration=form.time_duration.data,
+                start_time=form.start_time.data,
+                end_time=form.end_time.data,
                 remarks=form.remarks.data
             )
             db.session.add(quiz)
@@ -51,6 +55,8 @@ def register_routes(app):
         if form.validate_on_submit():
             quiz.date_of_quiz = form.date_of_quiz.data
             quiz.time_duration = form.time_duration.data
+            quiz.start_time = form.start_time.data
+            quiz.end_time = form.end_time.data
             quiz.remarks = form.remarks.data
             db.session.commit()
             flash('Quiz updated successfully!')

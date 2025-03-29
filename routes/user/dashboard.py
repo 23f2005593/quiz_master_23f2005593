@@ -3,20 +3,14 @@ from flask_login import login_required, current_user
 from models import Subject, Score
 
 
-
-
 def register_route(app):
-    
-
-
     @app.route('/user/dashboard')
     @login_required
     def user_dashboard():
         if current_user.is_admin:
             return redirect(url_for('admin_dashboard'))
         
-        # Get all subjects and recent scores
         subjects = Subject.query.all()
-        recent_scores = Score.query.filter_by(user_id=current_user.id).order_by(Score.time_stamp_of_attempt.desc()).limit(5).all()
+        recent_scores = Score.query.filter_by(user_id=current_user.id).order_by(Score.time_stamp_of_attempt.desc()).all()
         
         return render_template('user/dashboard.html', subjects=subjects, recent_scores=recent_scores)
