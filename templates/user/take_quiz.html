@@ -48,7 +48,6 @@
         
         <div class="mt-4">
             <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
-            <!-- Remove the view_quiz link or replace with a valid endpoint -->
         </div>
     </div>
 {% else %}
@@ -120,7 +119,6 @@
 {% if not submitted %}
 <script src="{{ url_for('static', filename='js/quiz.js') }}"></script>
 <script>
-    // Initialize quiz with parameters
     initializeQuiz("{{ questions|length }}", "{{ quiz.time_duration }}");
 </script>
 {% endif %}

@@ -14,7 +14,6 @@
                     {% if expired %}
                         <div class="alert alert-danger">
                             <h4><i class="fas fa-clock me-2"></i>Quiz Time Expired</h4>
-                            <p>This quiz is no longer available for attempt. The time window has passed.</p>
                             <p>Quiz was available from: <br>
                                <strong>{{ quiz.start_time.strftime('%B %d, %Y at %I:%M %p') }}</strong> to 
                                <strong>{{ quiz.end_time.strftime('%B %d, %Y at %I:%M %p') }}</strong>
@@ -90,33 +89,27 @@
 
 {% if not expired %}
 <script>
-    // Set the date we're counting down to
     const countDownDate = new Date("{{ quiz.start_time.isoformat() }}").getTime();
     
-    // Get quiz URL for redirection
     const quizURL = "{{ url_for('take_quiz', quiz_id=quiz.id) }}";
     
-    // Update the countdown every 1 second
     const x = setInterval(function() {
-        // Get current time
         const now = new Date().getTime();
         
-        // Find the distance between now and the countdown date
         const distance = countDownDate - now;
         
-        // Time calculations for days, hours, minutes and seconds
+        
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((distance % (1000 * 60)) / 1000);
         
-        // Display the result
         document.getElementById("days").innerHTML = days.toString().padStart(2, '0');
         document.getElementById("hours").innerHTML = hours.toString().padStart(2, '0');
         document.getElementById("minutes").innerHTML = minutes.toString().padStart(2, '0');
         document.getElementById("seconds").innerHTML = seconds.toString().padStart(2, '0');
         
-        // If the countdown is finished, redirect to quiz
+        // agar countdown khatam ho gaya
         if (distance < 0) {
             clearInterval(x);
             document.getElementById("days").innerHTML = "00";
@@ -124,10 +117,8 @@
             document.getElementById("minutes").innerHTML = "00";
             document.getElementById("seconds").innerHTML = "00";
             
-            // Show the start quiz button
             document.getElementById("start-quiz-btn").classList.remove("d-none");
             
-            // Auto redirect after 3 seconds
             setTimeout(function() {
                 window.location.href = quizURL;
             }, 3000);

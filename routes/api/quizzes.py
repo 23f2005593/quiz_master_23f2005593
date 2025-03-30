@@ -8,7 +8,8 @@ def register_route(app):
         for quiz in quizzes:
             result.append({
                 'id': quiz.id,
-                'date_of_quiz': quiz.date_of_quiz.strftime('%Y-%m-%d'),
+                'Start-Time': quiz.start_time,
+                'End-Time': quiz.end_time,
                 'time_duration': quiz.time_duration,
                 'questions_count': len(quiz.questions)
             })

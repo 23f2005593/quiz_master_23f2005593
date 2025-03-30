@@ -1,6 +1,6 @@
-from flask import render_template, request, Blueprint
+from flask import render_template, request, Blueprint, redirect, url_for
 from flask_login import login_required, current_user
-from models import Subject, Chapter, Quiz, User
+from models import Subject, Chapter, Quiz, User, Question, db
 from sqlalchemy import or_
 
 admin_search_bp = Blueprint('admin_search', __name__)
@@ -20,31 +20,37 @@ def admin_search():
             subjects=[],
             chapters=[],
             quizzes=[],
-            users=[]
+            users=[],
+            questions=[]
+
         )
     
-    # Search subjects
+    # subjects ko search karne ke liye
     subjects = Subject.query.filter(
         Subject.name.ilike(f'%{search_query}%') | 
         Subject.description.ilike(f'%{search_query}%')
     ).all()
     
-    # Search chapters
+    # chapters ko search karne ke liye
     chapters = Chapter.query.filter(
         Chapter.name.ilike(f'%{search_query}%') | 
         Chapter.description.ilike(f'%{search_query}%')
     ).all()
     
-    # Search quizzes
+    # quizzes ko search karne ke liye
     quizzes = Quiz.query.filter(
         Quiz.remarks.ilike(f'%{search_query}%')
     ).all()
     
-    # Search users
+    # user ko search karne ke liye
     users = User.query.filter(
         User.email.ilike(f'%{search_query}%') | 
         User.full_name.ilike(f'%{search_query}%') |
         User.qualification.ilike(f'%{search_query}%')
+    ).all()
+
+    questions = Question.query.filter(
+        Question.question_statement.ilike(f'%{search_query}%')
     ).all()
     
     return render_template(
@@ -53,7 +59,8 @@ def admin_search():
         subjects=subjects,
         chapters=chapters,
         quizzes=quizzes,
-        users=users
+        users=users,
+        questions=questions
     )
 
 def register_route(app):

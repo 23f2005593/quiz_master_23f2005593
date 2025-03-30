@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Get data from the hidden div
     const chartData = document.getElementById('chartData');
     
-    // Parse JSON data safely
     const getJsonData = (attr) => {
         try {
             return JSON.parse(chartData.getAttribute(attr) || '[]');
@@ -31,7 +29,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
-    // Subject Performance Chart
     if (subjectLabels.length > 0 && document.getElementById('subjectChart')) {
         const subjectCtx = document.getElementById('subjectChart').getContext('2d');
         const subjectChart = new Chart(subjectCtx, {
@@ -85,7 +82,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Monthly Activity Chart
     if (document.getElementById('monthlyChart')) {
         const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
         const monthlyChart = new Chart(monthlyCtx, {
@@ -129,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Score Trend Chart
     if (trendScores.length > 0 && document.getElementById('trendChart')) {
         const trendCtx = document.getElementById('trendChart').getContext('2d');
         const trendChart = new Chart(trendCtx, {

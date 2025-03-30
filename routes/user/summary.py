@@ -1,8 +1,7 @@
 from flask import render_template, Blueprint, jsonify
 from flask_login import login_required, current_user
 from sqlalchemy import extract, func
-from models import Score, Quiz, Chapter, Subject
-from database import db
+from models import Score, Quiz, Chapter, Subject, db
 from datetime import datetime
 
 summary_bp = Blueprint('user_summary', __name__)
@@ -10,7 +9,6 @@ summary_bp = Blueprint('user_summary', __name__)
 @summary_bp.route('/user/summary')
 @login_required
 def summary():
-    # subjects and count of quizzes attempted for each subject
     subject_data = db.session.query(
         Subject.name,
         func.count(Score.id).label('attempts')
@@ -24,7 +22,6 @@ def summary():
     subjects = [item[0] for item in subject_data]
     attempt_counts = [item[1] for item in subject_data]
     
-    # month-wise quiz attempt data
     current_year = datetime.now().year
     month_data = db.session.query(
         extract('month', Score.time_stamp_of_attempt).label('month'),
@@ -34,7 +31,6 @@ def summary():
         extract('year', Score.time_stamp_of_attempt) == current_year
     ).group_by('month').all()
     
-    # month numbers to names
     month_names = ['January', 'February', 'March', 'April', 'May', 'June', 
                   'July', 'August', 'September', 'October', 'November', 'December']
     

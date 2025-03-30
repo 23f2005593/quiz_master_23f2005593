@@ -162,196 +162,313 @@
         </div>
     </div>
 
-<div class="container mt-4">
-    <!-- Search Header -->
-    <div class="search-header text-center shadow">
-        <h1><i class="fas fa-search me-2"></i>Admin Search</h1>
-        <div class="row justify-content-center">
-            <div class="col-md-8 mt-3">
-                <form method="GET" action="{{ url_for('admin_dashboard') }}">
-                    <div class="input-group">
-                        <input type="text" class="form-control form-control-lg" 
-                               placeholder="Search for subjects, chapters, quizzes, or users..." 
-                               name="q" value="{{ search_query }}">
-                        <button class="btn btn-light" type="submit">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    
-    {% if search_query %}
-    <!-- Search Results Summary -->
-    <div class="alert alert-info">
-        <i class="fas fa-info-circle me-2"></i>
-        Found {{ subjects|length + chapters|length + quizzes|length + users|length }} results for "{{ search_query }}"
-    </div>
-    
-    <!-- Users Section -->
-    <div class="result-section">
-        <h3 class="section-title">
-            <i class="fas fa-users me-2"></i>Users 
-            <span class="badge bg-primary">{{ users|length }}</span>
-        </h3>
-        
-        {% if users %}
-        <div class="row">
-            {% for user in users %}
-            <div class="col-md-6">
-                <div class="card result-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ user.full_name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
-                        <p class="card-text">
-                            <strong>Qualification:</strong> {{ user.qualification or 'N/A' }}<br>
-                            <strong>Role:</strong> 
-                            {% if user.is_admin %}
-                            <span class="badge bg-primary">Admin</span>
-                            {% else %}
-                            <span class="badge bg-success">User</span>
-                            {% endif %}
-                        </p>
-                        <a href="{{ url_for('admin_users.users') }}?search={{ user.email }}" class="card-link">
-                            <i class="fas fa-external-link-alt me-1"></i>View in User Management
-                        </a>
-                    </div>
+    <!-- Charts Section
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5><i class="fas fa-chart-pie me-2"></i>Subjects & Chapters</h5>
+                <div class="chart-container">
+                    <canvas id="subjectsChart"></canvas>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <p class="text-muted">No users found matching "{{ search_query }}"</p>
-        {% endif %}
-    </div>
-    
-    <!-- Subjects Section -->
-    <div class="result-section">
-        <h3 class="section-title">
-            <i class="fas fa-book me-2"></i>Subjects 
-            <span class="badge bg-success">{{ subjects|length }}</span>
-        </h3>
-        
-        {% if subjects %}
-        <div class="row">
-            {% for subject in subjects %}
-            <div class="col-md-6">
-                <div class="card result-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ subject.name }}</h5>
-                        <p class="card-text">
-                            {% if subject.description %}
-                            {{ subject.description|truncate(100) }}
-                            {% else %}
-                            <span class="text-muted">No description available</span>
-                            {% endif %}
-                        </p>
-                        <p class="card-text">
-                            <strong>Chapters:</strong> {{ subject.chapters|length }}
-                        </p>
-                        <a href="{{ url_for('subjects') }}" class="card-link">
-                            <i class="fas fa-external-link-alt me-1"></i>View in Subjects
-                        </a>
-                    </div>
+        <div class="col-md-6">
+            <div class="chart-card">
+                <h5><i class="fas fa-chart-bar me-2"></i>Quiz Attempts ({{ subject_data.labels|length }} Month)</h5>
+                <div class="chart-container">
+                    <canvas id="quizAttemptsChart"></canvas>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <p class="text-muted">No subjects found matching "{{ search_query }}"</p>
-        {% endif %}
-    </div>
-    
-    <!-- Chapters Section -->
-    <div class="result-section">
-        <h3 class="section-title">
-            <i class="fas fa-bookmark me-2"></i>Chapters 
-            <span class="badge bg-info">{{ chapters|length }}</span>
-        </h3>
-        
-        {% if chapters %}
-        <div class="row">
-            {% for chapter in chapters %}
-            <div class="col-md-6">
-                <div class="card result-card">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ chapter.name }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            Subject: {{ chapter.subject.name }}
-                        </h6>
-                        <p class="card-text">
-                            {% if chapter.description %}
-                            {{ chapter.description|truncate(100) }}
-                            {% else %}
-                            <span class="text-muted">No description available</span>
-                            {% endif %}
-                        </p>
-                        <p class="card-text">
-                            <strong>Quizzes:</strong> {{ chapter.quizzes|length }}
-                        </p>
-                        <a href="{{ url_for('chapters') }}" class="card-link">
-                            <i class="fas fa-external-link-alt me-1"></i>View in Chapters
-                        </a>
-                    </div>
+    </div> -->
+
+    <div class="container mt-4">
+        <!-- Search Header -->
+        <div class="search-header text-center shadow">
+            <h1><i class="fas fa-search me-2"></i>Admin Search</h1>
+            <div class="row justify-content-center">
+                <div class="col-md-8 mt-3">
+                    <form method="GET" action="{{ url_for('admin_dashboard') }}">
+                        <div class="input-group">
+                            <input type="text" class="form-control form-control-lg" 
+                                placeholder="Search for subjects, chapters, quizzes, or users..." 
+                                name="q" value="{{ search_query }}">
+                            <button class="btn btn-light" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-            {% endfor %}
         </div>
-        {% else %}
-        <p class="text-muted">No chapters found matching "{{ search_query }}"</p>
-        {% endif %}
-    </div>
-    
-    <!-- Quizzes Section -->
-    <div class="result-section">
-        <h3 class="section-title">
-            <i class="fas fa-question-circle me-2"></i>Quizzes 
-            <span class="badge bg-warning text-dark">{{ quizzes|length }}</span>
-        </h3>
         
-        {% if quizzes %}
-        <div class="row">
-            {% for quiz in quizzes %}
-            <div class="col-md-6">
-                <div class="card result-card">
-                    <div class="card-body">
-                        <h5 class="card-title">Quiz #{{ quiz.id }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">
-                            Chapter: {{ quiz.chapter.name }} | Subject: {{ quiz.chapter.subject.name }}
-                        </h6>
-                        <p class="card-text">
-                            <strong>Date:</strong> {{ quiz.date_of_quiz.strftime('%d %b, %Y') }}<br>
-                            <strong>Duration:</strong> {{ quiz.time_duration }} minutes<br>
-                            <strong>Questions:</strong> {{ quiz.questions|length }}
-                        </p>
-                        <p class="card-text">
-                            {% if quiz.remarks %}
-                            <strong>Remarks:</strong> {{ quiz.remarks|truncate(100) }}
-                            {% endif %}
-                        </p>
-                        <a href="{{ url_for('quizzes') }}" class="card-link">
-                            <i class="fas fa-external-link-alt me-1"></i>View in Quizzes
-                        </a>
+        {% if search_query %}
+        <!-- Search Results Summary -->
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>
+            Found {{ subjects|length + chapters|length + quizzes|length + users|length + questions|length }} results for "{{ search_query }}"
+        </div>
+        
+        <!-- Users Section -->
+        <div class="result-section">
+            <h3 class="section-title">
+                <i class="fas fa-users me-2"></i>Users 
+                <span class="badge bg-primary">{{ users|length }}</span>
+            </h3>
+            
+            {% if users %}
+            <div class="row">
+                {% for user in users %}
+                <div class="col-md-6">
+                    <div class="card result-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ user.full_name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ user.email }}</h6>
+                            <p class="card-text">
+                                <strong>Qualification:</strong> {{ user.qualification or 'N/A' }}<br>
+                                <strong>Role:</strong> 
+                                {% if user.is_admin %}
+                                <span class="badge bg-primary">Admin</span>
+                                {% else %}
+                                <span class="badge bg-success">User</span>
+                                {% endif %}
+                            </p>
+                            <a href="{{ url_for('admin_users.users') }}?search={{ user.email }}" class="card-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View in User Management
+                            </a>
+                        </div>
                     </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
+            {% else %}
+            <p class="text-muted">No users found matching "{{ search_query }}"</p>
+            {% endif %}
+        </div>
+        
+        <!-- Subjects Section -->
+        <div class="result-section">
+            <h3 class="section-title">
+                <i class="fas fa-book me-2"></i>Subjects 
+                <span class="badge bg-success">{{ subjects|length }}</span>
+            </h3>
+            
+            {% if subjects %}
+            <div class="row">
+                {% for subject in subjects %}
+                <div class="col-md-6">
+                    <div class="card result-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ subject.name }}</h5>
+                            <p class="card-text">
+                                {% if subject.description %}
+                                {{ subject.description|truncate(100) }}
+                                {% else %}
+                                <span class="text-muted">No description available</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Chapters:</strong> {{ subject.chapters|length }}
+                            </p>
+                            <a href="{{ url_for('edit_subject', id=subject.id) }}" class="card-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View Subject
+                            </a>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">No subjects found matching "{{ search_query }}"</p>
+            {% endif %}
+        </div>
+        
+        <!-- Chapters Section -->
+        <div class="result-section">
+            <h3 class="section-title">
+                <i class="fas fa-bookmark me-2"></i>Chapters 
+                <span class="badge bg-info">{{ chapters|length }}</span>
+            </h3>
+            
+            {% if chapters %}
+            <div class="row">
+                {% for chapter in chapters %}
+                <div class="col-md-6">
+                    <div class="card result-card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ chapter.name }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                Subject: {{ chapter.subject.name }}
+                            </h6>
+                            <p class="card-text">
+                                {% if chapter.description %}
+                                {{ chapter.description|truncate(100) }}
+                                {% else %}
+                                <span class="text-muted">No description available</span>
+                                {% endif %}
+                            </p>
+                            <p class="card-text">
+                                <strong>Quizzes:</strong> {{ chapter.quizzes|length }}
+                            </p>
+                            <a href="{{ url_for('chapters') }}" class="card-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View in Chapters
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">No chapters found matching "{{ search_query }}"</p>
+            {% endif %}
+        </div>
+        
+        <!-- Quizzes Section -->
+        <div class="result-section">
+            <h3 class="section-title">
+                <i class="fas fa-question-circle me-2"></i>Quizzes 
+                <span class="badge bg-warning text-dark">{{ quizzes|length }}</span>
+            </h3>
+            
+            {% if quizzes %}
+            <div class="row">
+                {% for quiz in quizzes %}
+                <div class="col-md-6">
+                    <div class="card result-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Quiz #{{ quiz.id }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                Chapter: {{ quiz.chapter.name }} | Subject: {{ quiz.chapter.subject.name }}
+                            </h6>
+                            <p class="card-text">
+                                <strong>Date:</strong> {{ quiz.date_of_quiz.strftime('%d %b, %Y') }}<br>
+                                <strong>Duration:</strong> {{ quiz.time_duration }} minutes<br>
+                                <strong>Questions:</strong> {{ quiz.questions|length }}
+                            </p>
+                            <p class="card-text">
+                                {% if quiz.remarks %}
+                                <strong>Remarks:</strong> {{ quiz.remarks|truncate(100) }}
+                                {% endif %}
+                            </p>
+                            <a href="{{ url_for('edit_quiz_questions', quiz_id=quiz.id) }}" class="card-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View in Quizzes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">No quizzes found matching "{{ search_query }}"</p>
+            {% endif %}
+        </div>
+        
+        <!-- Question Section -->
+        <div class="result-section">
+            <h3 class="section-title">
+                <i class="fas fa-question me-2"></i>Questions
+                <span class="badge bg-danger">{{ questions|length }}</span>
+            </h3>
+            
+            {% if questions %}
+            <div class="row">
+                {% for question in questions %}
+                <div class="col-md-6">
+                    <div class="card result-card">
+                        <div class="card-body">
+                            <h5 class="card-title">Question #{{ question.id }}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                Quiz: #{{ question.quiz_id }} | 
+                                Chapter: {{ question.quiz.chapter.name }} | 
+                                Subject: {{ question.quiz.chapter.subject.name }}
+                            </h6>
+                            <p class="card-text">
+                                <strong>Question:</strong> {{ question.question_statement|truncate(100) }}
+                            </p>
+                            <a href="{{ url_for('edit_question', id=question.id) }}" class="card-link">
+                                <i class="fas fa-external-link-alt me-1"></i>View in Quizzes
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p class="text-muted">No questions found matching "{{ search_query }}"</p>
+            {% endif %}
         </div>
         {% else %}
-        <p class="text-muted">No quizzes found matching "{{ search_query }}"</p>
+        <!-- No Search Query -->
+        <div class="text-center mt-5">
+            <p class="text-muted">Enter a search query to find subjects, chapters, quizzes, or users</p>
+        </div>
         {% endif %}
     </div>
-    {% else %}
-    <!-- No Search Query -->
-    <div class="text-center mt-5">
-        <p class="text-muted">Enter a search query to find subjects, chapters, quizzes, or users</p>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Subject Chart
+    const subjectCtx = document.getElementById('subjectsChart').getContext('2d');
+    const subjectData = {{ subject_data|tojson }};
+    
+    new Chart(subjectCtx, {
+        type: 'pie',
+        data: {
+            labels: subjectData.labels,
+            datasets: [{
+                data: subjectData.counts,
+                backgroundColor: [
+                    '#4C51BF', '#48BB78', '#ED8936', '#38B2AC', '#9F7AEA',
+                    '#667EEA', '#F6AD55', '#FC8181', '#B794F4', '#F687B3'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                }
+            }
+        }
+    });
+    
+    // Quiz Attempts Chart
+    const quizCtx = document.getElementById('quizAttemptsChart').getContext('2d');
+    const quizData = {{ quiz_attempts|tojson }};
+    
+    new Chart(quizCtx, {
+        type: 'bar',
+        data: {
+            labels: quizData.labels,
+            datasets: [{
+                label: 'Quiz Attempts',
+                data: quizData.counts,
+                backgroundColor: '#4C51BF',
+                borderColor: '#4C51BF',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
 {% endblock %}

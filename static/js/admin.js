@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Subject Distribution Chart
     const subjectCanvas = document.getElementById('subjectChart');
     const subjectLabels = JSON.parse(subjectCanvas.dataset.labels || '["No Data"]');
     const subjectCounts = JSON.parse(subjectCanvas.dataset.counts || '[0]');
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Quiz Attempts Chart
     const quizCanvas = document.getElementById('quizAttemptsChart');
     const quizLabels = JSON.parse(quizCanvas.dataset.labels || '["No Data"]');
     const quizCounts = JSON.parse(quizCanvas.dataset.counts || '[0]');

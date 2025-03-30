@@ -37,7 +37,6 @@
                                         <td>{{ score.total_scored }}/{{ score.total_questions }}</td>
                                         <td>
                                             <div class="progress">
-                                                <!-- We'll replace this with JavaScript -->
                                                 <div id="progress-{{ loop.index }}" 
                                                      data-percentage="{{ percentage }}"
                                                      class="progress-bar">
@@ -67,20 +66,17 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Set up progress bars with correct classes and styles
+    
     var progressBars = document.querySelectorAll('[id^="progress-"]');
     progressBars.forEach(function(bar) {
         var percentage = parseFloat(bar.getAttribute('data-percentage'));
         
-        // Set width
         bar.style.width = percentage + '%';
         
-        // Set attributes
         bar.setAttribute('aria-valuenow', percentage);
         bar.setAttribute('aria-valuemin', 0);
         bar.setAttribute('aria-valuemax', 100);
         
-        // Set color class based on percentage
         if (percentage >= 80) {
             bar.classList.add('bg-success');
         } else if (percentage >= 60) {
@@ -92,12 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Check if we have scores data
     var dataElement = document.getElementById('chart-data');
     var hasScores = dataElement.getAttribute('data-has-scores') === 'true';
     
     if (hasScores) {
-        // Get chart data
         var chartData = {
             excellent: parseInt(dataElement.getAttribute('data-excellent') || 0),
             good: parseInt(dataElement.getAttribute('data-good') || 0),

@@ -3,14 +3,12 @@ function confirmDelete(message) {
     return confirm(message || 'Are you sure you want to delete this item?');
 }
 
-// Enable Bootstrap tooltips
 document.addEventListener('DOMContentLoaded', function() {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl);
     });
     
-    // Add validation classes to forms
     const forms = document.querySelectorAll('.needs-validation');
     Array.from(forms).forEach(form => {
         form.addEventListener('submit', event => {
@@ -22,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, false);
     });
     
-    // Enable search functionality in tables
     const searchInput = document.getElementById('tableSearch');
     if (searchInput) {
         searchInput.addEventListener('keyup', function() {
@@ -37,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Format date inputs for better cross-browser compatibility
 function formatDateForInput(dateString) {
     const date = new Date(dateString);
     const year = date.getFullYear();
@@ -46,7 +42,7 @@ function formatDateForInput(dateString) {
     return `${year}-${month}-${day}`;
 }
 
-// Handle countdown timer for quizzes
+
 function startQuizTimer(durationInMinutes, displayElement) {
     let timer = durationInMinutes * 60;
     const interval = setInterval(function() {
@@ -65,7 +61,6 @@ function startQuizTimer(durationInMinutes, displayElement) {
     return interval;
 }
 
-// Generate random colors for charts
 function generateRandomColors(count) {
     const colors = [];
     for (let i = 0; i < count; i++) {
@@ -77,7 +72,6 @@ function generateRandomColors(count) {
     return colors;
 }
 
-// Fetch data from API endpoints
 async function fetchApiData(url) {
     try {
         const response = await fetch(url);

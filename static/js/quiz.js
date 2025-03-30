@@ -1,7 +1,6 @@
 // Quiz functionality
 function initializeQuiz(totalQuestions, quizDuration) {
     document.addEventListener('DOMContentLoaded', function() {
-        // Quiz navigation
         const nextButtons = document.querySelectorAll('.next-question');
         const prevButtons = document.querySelectorAll('.prev-question');
         
@@ -11,7 +10,6 @@ function initializeQuiz(totalQuestions, quizDuration) {
                 const currentCard = document.getElementById('question-' + currentQuestion);
                 const nextCard = document.getElementById('question-' + (currentQuestion + 1));
                 
-                // Check if current question is answered
                 const inputs = currentCard.querySelectorAll('input[type="radio"]');
                 const questionId = inputs[0].name.split('_')[1];
                 const isAnswered = document.querySelector('input[name="question_' + questionId + '"]:checked');
@@ -24,7 +22,6 @@ function initializeQuiz(totalQuestions, quizDuration) {
                 currentCard.classList.remove('active');
                 nextCard.classList.add('active');
                 
-                // Update progress bar
                 updateProgress((currentQuestion + 1) / totalQuestions * 100);
             });
         });
@@ -38,12 +35,10 @@ function initializeQuiz(totalQuestions, quizDuration) {
                 currentCard.classList.remove('active');
                 prevCard.classList.add('active');
                 
-                // Update progress bar
                 updateProgress((currentQuestion - 1) / totalQuestions * 100);
             });
         });
         
-        // Progress bar update
         function updateProgress(percentage) {
             const progressBar = document.getElementById('progress-bar');
             progressBar.style.width = percentage + '%';
@@ -51,7 +46,6 @@ function initializeQuiz(totalQuestions, quizDuration) {
             progressBar.textContent = Math.round(percentage) + '%';
         }
         
-        // Timer functionality
         const timerDisplay = document.getElementById('quiz-timer');
         if (timerDisplay && quizDuration) {
             const timeParts = quizDuration.split(':').map(Number);
@@ -79,7 +73,6 @@ function initializeQuiz(totalQuestions, quizDuration) {
                 
                 timerDisplay.textContent = 'Time remaining: ' + hoursStr + ':' + minutesStr + ':' + secondsStr;
                 
-                // Warning when 5 minutes left
                 if (totalSeconds === 300) {
                     alert('5 minutes remaining!');
                 }

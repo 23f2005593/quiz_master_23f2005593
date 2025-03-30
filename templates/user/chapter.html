@@ -216,45 +216,40 @@
             {% for quiz in chapter.quizzes %}
                 <div class="quiz-item">
                     <div class="quiz-item-header">
-                        <h5 class="mb-0">Quiz #{{ loop.index }}</h5>
+                        <h5 class="mb-0">Quiz {{ loop.index }}</h5>
                     </div>
                     <div class="quiz-item-body">
                         <div class="quiz-meta">
-                            <div class="quiz-meta-item">
-                                <div class="quiz-meta-icon">
-                                    <i class="fas fa-calendar-alt"></i>
-                                </div>
-                                <span>{{ quiz.date_of_quiz.strftime('%d %b %Y') }}</span>
+                            <div class="mt-3">
+                                <h6 class="text-muted mb-1">Start Time:</h6>
+                                <p class="mb-0">{{ quiz.start_time }}</p>
                             </div>
-                            <div class="quiz-meta-item">
-                                <div class="quiz-meta-icon">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <span>{{ quiz.time_duration }} min</span>
+                            <div class="mt-3">
+                                <h6 class="text-muted mb-1">Duration:</h6>
+                                <p class="mb-0">{{ quiz.time_duration }}</p>
                             </div>
                         </div>
                         <div class="quiz-meta">
-                            <div class="quiz-meta-item">
-                                <div class="quiz-meta-icon">
-                                    <i class="fas fa-question-circle"></i>
-                                </div>
-                                <span>{{ quiz.questions|length }} questions</span>
+                            <div class="mt-3">
+                                <h6 class="text-muted mb-1">End Time:</h6>
+                                <p class="mb-0">{{ quiz.end_time }}</p>
                             </div>
-                            {% if quiz.total_marks %}
+                            <!-- {% if quiz.total_marks %}
                             <div class="quiz-meta-item">
                                 <div class="quiz-meta-icon">
                                     <i class="fas fa-star"></i>
                                 </div>
                                 <span>{{ quiz.total_marks }} marks</span>
                             </div>
-                            {% endif %}
-                        </div>
-                        {% if quiz.remarks %}
+                            {% endif %} -->
+                            {% if quiz.remarks %}
                             <div class="mt-3">
                                 <h6 class="text-muted mb-1">Remarks:</h6>
-                                <p class="mb-0">{{ quiz.remarks|truncate(100) }}</p>
+                                <span class="mb-0">{{ quiz.remarks|truncate(100) }}</span>
                             </div>
                         {% endif %}
+                        </div>
+                        
                     </div>
                     <div class="quiz-item-footer">
                         <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="btn btn-take-quiz">

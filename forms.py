@@ -28,8 +28,6 @@ class ChapterForm(FlaskForm):
     subject_id = SelectField('Subject', coerce=int, validators=[DataRequired()])
     submit = SubmitField('Save')
 
-# forms.py (updated)
-
 from wtforms import DateTimeLocalField
 
 class QuizForm(FlaskForm):

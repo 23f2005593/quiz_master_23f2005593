@@ -67,7 +67,7 @@
     <!-- Search Results Summary -->
     <div class="alert alert-info">
         <i class="fas fa-info-circle me-2"></i>
-        Found {{ subjects|length + chapters|length + quizzes|length + users|length }} results for "{{ search_query }}"
+        Found {{ subjects|length + chapters|length + quizzes|length + users|length + questions|length }} results for "{{ search_query }}"
     </div>
     
     <!-- Users Section -->
@@ -221,6 +221,39 @@
         </div>
         {% else %}
         <p class="text-muted">No quizzes found matching "{{ search_query }}"</p>
+        {% endif %}
+    </div>
+
+    <!-- Question Section -->
+    <div class="result-section">
+        <h3 class="section-title">
+            <i class="fas fa-question me-2"></i>Questions
+            <span class="badge bg-danger">{{ questions|length }}</span>
+        </h3>
+        
+        {% if questions %}
+        <div class="row">
+            {% for question in questions %}
+            <div class="col-md-6">
+                <div class="card result-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Question #{{ question.id }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">
+                            Chapter: {{ question.chapter.name }} | Subject: {{ question.chapter.subject.name }}
+                        </h6>
+                        <p class="card-text">
+                            <strong>Question:</strong> {{ question.question_statement|truncate(100) }}
+                        </p>
+                        <a href="{{ url_for('question_form') }}" class="card-link">
+                            <i class="fas fa-external-link-alt me-1"></i>View in Questions
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted">No questions found matching "{{ search_query }}"</p>
         {% endif %}
     </div>
     {% else %}

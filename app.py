@@ -1,9 +1,8 @@
 from flask import Flask
 from flask_login import LoginManager
-from datetime import datetime
 from database import db, migrate
 from config import Config
-from models import db, User, Subject, Chapter, Quiz, Question, Score
+from models import db, User
 
 from routes.auth.index import register_route as register_index
 from routes.auth.login import register_route as register_login
@@ -31,10 +30,6 @@ from routes.admin.summary import register_route as register_admin_summary
 
 from routes.admin.users import register_routes as register_admin_users
 from routes.admin.search import register_route as register_admin_search
-
-
-
-# Add this line with the other route registrations
 
 
 app = Flask(__name__)

@@ -1,9 +1,9 @@
 from flask import render_template, redirect, url_for, request, flash, Blueprint
 from flask_login import login_required, current_user
 from models import User, db
-from forms import UserForm  # Import from your existing forms.py
-from werkzeug.security import generate_password_hash
-from datetime import datetime
+from forms import UserForm 
+# from werkzeug.security import generate_password_hash
+# from datetime import datetime
 
 admin_users_bp = Blueprint('admin_users', __name__)
 
@@ -14,7 +14,7 @@ def users():
         flash('Access denied. Admin privileges required.', 'danger')
         return redirect(url_for('user_dashboard'))
     
-    # Get search query if any
+    # serach query ko handle karne ke liye
     search_query = request.args.get('search', '')
     
     if search_query:
@@ -38,13 +38,13 @@ def add_user():
     form = UserForm()
     
     if form.validate_on_submit():
-        # Check if email already exists
+        # email ki uniqueness ko check karne ke liye
         existing_user = User.query.filter_by(email=form.email.data).first()
         if existing_user:
             flash('Email already registered. Please use a different email.', 'danger')
             return render_template('admin/add_user.html', form=form)
         
-        # Create new user
+        # new user ko create karne ke liye
         new_user = User(
             email=form.email.data,
             full_name=form.full_name.data,
@@ -71,7 +71,6 @@ def delete_user(user_id):
     
     user = User.query.get_or_404(user_id)
     
-    # Prevent self-deletion
     if user.id == current_user.id:
         flash('You cannot delete your own account!', 'danger')
         return redirect(url_for('admin_users.users'))
